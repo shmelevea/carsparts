@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cars&amp;Parts</string>
+    <string name="garage">Гараж</string>
+    <string name="add_car">Добавить машину</string>
+    <string name="add_part">Добавить запчасть</string>
+    <string name="delete_part">Удалить запчасть</string>
+    <string name="are_you_sure_you_want_to_delete_the_part">Вы уверены, что хотите удалить запчасть \"%1$s\"?</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отменить</string>
+    <string name="part_number_copied_to_clipboard">Партномер запчасти скопирован</string>
+
+    <string name="part_info">Информация о запчасти</string>
+    <string name="part_number">Номер запчасти</string>
+    <string name="second_part_number">Доп. номер запчасти</string>
+    <string name="purchase_date">Дата покупки</string>
+    <string name="replacement_date">Дата замены</string>
+    <string name="replacement_cost">Стоимость замены (₽)</string>
+    <string name="part_cost">Стоимость запчасти (₽)</string>
+    <string name="store">Магазин</string>
+    <string name="analogs">Аналоги</string>
+    <string name="mileage_km">Пробег</string>
+    <string name="breakdown_mileage_km">Пробег до поломки</string>
+
+    <string name="edit_part">Редактировать запчасть</string>
+    <string name="part_name">Название запчасти</string>
+    <string name="ok">Ок</string>
+    <string name="edit_car">Редактировать машину</string>
+    <string name="name">Имя</string>
+    <string name="brand">Бренд</string>
+    <string name="model">Модель</string>
+    <string name="year">Год</string>
+    <string name="vin">VIN</string>
+    <string name="description">Примечание</string>
+    <string name="remove_spare_part">Удалить запчасть</string>
+    <string name="vin_copied_to_clipboard">VIN скопирован</string>
+    <string name="part_coats_price">%1$s ₽</string>
+    <string name="mileage_km_count">%1$s км</string>
+    <string name="breakdown_mileage_km_count">%1$s км</string>
+    <string name="replacement_coast_price">%1$s ₽</string>
+    <string name="select_date">Выберите дату</string>
+    <string name="quantity_km">%1$s км</string>
+    <string name="quantity_rub">%1$s ₽</string>
+    <string name="search_by_name">Поиск по имени</string>
+    <string name="search">Поиск</string>
+    <string name="clear_search">Очистить поиск</string>
+</resources>
