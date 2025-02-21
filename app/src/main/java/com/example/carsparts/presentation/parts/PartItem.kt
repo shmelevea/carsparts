@@ -108,7 +108,6 @@ fun PartItem(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewPartItem() {

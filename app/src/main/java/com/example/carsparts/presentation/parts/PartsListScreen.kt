@@ -79,7 +79,6 @@ fun PartsListScreen(
     )
 }
 
-
 @Composable
 fun PartsListScreenContent(
     carId: Int,

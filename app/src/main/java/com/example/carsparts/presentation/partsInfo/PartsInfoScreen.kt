@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.PartEntity
+import com.example.carsparts.viewmodels.PartsInfoViewModel
 
 @Composable
 fun PartsInfoScreen(
@@ -71,7 +72,7 @@ fun PartsInfoScreenContent(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Заголовок с названием детали
+
             Text(
                 text = part.name,
                 style = MaterialTheme.typography.headlineMedium,
@@ -114,6 +115,7 @@ fun PartsInfoScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             InfoRow(label = stringResource(R.string.store), value = part.store)
+
             Spacer(modifier = Modifier.height(16.dp))
 
             InfoRow(
@@ -196,7 +198,6 @@ fun InfoRow(label: String, value: String) {
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

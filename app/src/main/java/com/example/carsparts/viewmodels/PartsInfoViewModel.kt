@@ -1,12 +1,10 @@
-package com.example.carsparts.presentation.partsInfo
+package com.example.carsparts.viewmodels
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.carsparts.domain.entity.PartEntity
 import com.example.carsparts.domain.repository.PartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,16 +24,5 @@ class PartsInfoViewModel @Inject constructor(
                 _part.value = partEntity
             }
         }
-    }
-
-    fun editPart(part: PartEntity) {
-        viewModelScope.launch {
-            repository.updatePart(part)
-            _part.value = part
-        }
-    }
-
-    fun getPartById(id: Int): Flow<PartEntity?> {
-        return repository.getPartById(id)
     }
 }

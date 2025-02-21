@@ -18,11 +18,9 @@ class CarsViewModel @Inject constructor(
     private val _cars = MutableStateFlow<List<CarEntity>>(emptyList())
     val cars: StateFlow<List<CarEntity>> = _cars
 
-    // Состояние для отображения диалога
     private val _showDialog = MutableStateFlow(false)
     val showDialog: StateFlow<Boolean> = _showDialog
 
-    // Машина, которую нужно редактировать
     private val _carToEdit = MutableStateFlow<CarEntity?>(null)
     val carToEdit: StateFlow<CarEntity?> = _carToEdit
 
@@ -41,25 +39,24 @@ class CarsViewModel @Inject constructor(
     fun addCar(car: CarEntity) {
         viewModelScope.launch {
             carRepository.insertCar(car)
-            loadCars() // Обновляем список после добавления
+            loadCars()
         }
     }
 
     fun onEditCar(car: CarEntity) {
         viewModelScope.launch {
-            carRepository.updateCar(car) // Добавить метод обновления в репозиторий
-            loadCars() // Обновить список после редактирования
+            carRepository.updateCar(car)
+            loadCars()
         }
     }
 
     fun onDeleteCar(car: CarEntity) {
         viewModelScope.launch {
-            carRepository.deleteCar(car.id) // Используем ID для удаления
-            loadCars() // Обновить список после удаления
+            carRepository.deleteCar(car.id)
+            loadCars()
         }
     }
 
-    // Управление состоянием диалога
     fun setShowDialog(show: Boolean) {
         _showDialog.value = show
     }

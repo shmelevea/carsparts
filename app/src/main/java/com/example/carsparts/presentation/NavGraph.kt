@@ -13,7 +13,7 @@ import com.example.carsparts.presentation.addpart.CreateOrEditPartScreen
 import com.example.carsparts.presentation.cars.CarsListScreen
 import com.example.carsparts.presentation.parts.PartsListScreen
 import com.example.carsparts.presentation.partsInfo.PartsInfoScreen
-import com.example.carsparts.presentation.partsInfo.PartsInfoViewModel
+import com.example.carsparts.viewmodels.PartsInfoViewModel
 import com.example.carsparts.viewmodels.CarsViewModel
 import com.example.carsparts.viewmodels.PartsViewModel
 
