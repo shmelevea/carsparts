@@ -65,9 +65,9 @@ fun CarsPartsNavHost(navController: NavHostController) {
 
             CreateOrEditPartScreen(
                 carId = carId,
-                partToEdit = null, // Это создание новой запчасти
+                partToEdit = null,
                 onDismiss = {
-                    navController.popBackStack() // Закрываем экран
+                    navController.popBackStack()
                 }
             )
         }
@@ -81,25 +81,12 @@ fun CarsPartsNavHost(navController: NavHostController) {
 
             CreateOrEditPartScreen(
                 carId = carId,
-                partToEdit = part, // Это редактирование существующей запчасти
+                partToEdit = part,
                 onDismiss = {
-                    navController.popBackStack() // Закрываем экран
+                    navController.popBackStack()
                 }
             )
         }
-
-//        composable("partInfo/{partId}") { backStackEntry ->
-//
-//            val partId = backStackEntry.arguments?.getString("partId")?.toIntOrNull() ?: 0
-//            val partsInfoViewModel: PartsInfoViewModel = hiltViewModel()
-//            partsInfoViewModel.loadPartInfo(partId)
-//            val part by partsInfoViewModel.part.collectAsState(initial = null)
-//            part?.let {
-//                PartsInfoScreen(
-//                    partId = partId
-//                )
-//            }
-//        }
 
         composable("partInfo/{partId}") { backStackEntry ->
             val partId = backStackEntry.arguments?.getString("partId")?.toIntOrNull() ?: 0

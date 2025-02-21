@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -106,19 +107,19 @@ fun CarItem(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Удаление машины") },
-            text = { Text("Вы действительно хотите удалить машину \"${car.name}\"?") },
+            title = { Text(stringResource(R.string.delete_car)) },
+            text = { Text(stringResource(R.string.want_to_delete_car, car.name)) },
             confirmButton = {
                 Button(onClick = {
                     onDelete(car)
                     showDeleteDialog = false
                 }) {
-                    Text("Удалить")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
                 Button(onClick = { showDeleteDialog = false }) {
-                    Text("Отмена")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

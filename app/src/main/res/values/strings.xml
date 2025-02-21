@@ -43,4 +43,6 @@
     <string name="search_by_name">Search by name</string>
     <string name="search">Search</string>
     <string name="clear_search">Clear search</string>
+    <string name="want_to_delete_car">Are you sure you want to delete \"%1$s\" сar?</string>
+    <string name="delete_car">Delete car</string>
 </resources>

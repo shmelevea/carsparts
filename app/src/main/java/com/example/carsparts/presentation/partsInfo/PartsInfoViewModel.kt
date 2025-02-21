@@ -20,7 +20,6 @@ class PartsInfoViewModel @Inject constructor(
     private val _part = MutableStateFlow<PartEntity?>(null)
     val part: StateFlow<PartEntity?> = _part
 
-    // Метод для загрузки данных по partId
     fun loadPartInfo(partId: Int) {
         viewModelScope.launch {
             repository.getPartById(partId).collect { partEntity ->
@@ -29,17 +28,13 @@ class PartsInfoViewModel @Inject constructor(
         }
     }
 
-    // Метод для редактирования части
     fun editPart(part: PartEntity) {
         viewModelScope.launch {
-            // Обновляем данные в репозитории
             repository.updatePart(part)
-            // Обновляем локальное состояние
             _part.value = part
         }
     }
 
-    // Метод для получения данных по partId (если нужно)
     fun getPartById(id: Int): Flow<PartEntity?> {
         return repository.getPartById(id)
     }

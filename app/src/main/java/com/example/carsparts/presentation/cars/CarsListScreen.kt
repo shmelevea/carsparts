@@ -52,7 +52,7 @@ fun CarsListScreen(
                     it.brand.contains(searchQuery, ignoreCase = true) ||
                     it.model.contains(searchQuery, ignoreCase = true)
         }
-        .sortedWith(compareBy({ it.name }, { it.brand }, { it.model })) // Сортируем по имени, потом по марке, потом по модели
+        .sortedWith(compareBy({ it.name }, { it.brand }, { it.model }))
 
     CarsListScreenContent(
         carList = sortedCarList,
@@ -63,8 +63,8 @@ fun CarsListScreen(
         },
         onDeleteCar = viewModel::onDeleteCar,
         onAddCarClick = {
-            viewModel.setCarToEdit(null)  // Убираем редактируемую машину
-            viewModel.setShowDialog(true) // Показываем диалог
+            viewModel.setCarToEdit(null)
+            viewModel.setShowDialog(true)
         },
         searchQuery = searchQuery,
         onSearchQueryChanged = { searchQuery = it }
@@ -113,7 +113,6 @@ fun CarsListScreenContent(
                     .align(Alignment.CenterHorizontally)
             )
 
-            // Строка поиска
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = onSearchQueryChanged,
@@ -124,9 +123,9 @@ fun CarsListScreenContent(
                 singleLine = true,
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { onSearchQueryChanged("") }) { // Очистка поля
+                        IconButton(onClick = { onSearchQueryChanged("") }) {
                             Icon(
-                                imageVector = Icons.Default.Close, // Иконка крестика
+                                imageVector = Icons.Default.Close,
                                 contentDescription = stringResource(R.string.clear_search),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -147,17 +146,16 @@ fun CarsListScreenContent(
             }
         }
 
-        // Кнопка "Добавить машину" в правом нижнем углу
         FloatingActionButton(
             onClick = onAddCarClick,
             modifier = Modifier
-                .align(Alignment.BottomEnd)  // Выравнивание в правом нижнем углу
-                .padding(16.dp), // Добавляем отступы
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
             shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(
-                imageVector = Icons.Default.Add, // Иконка плюса
+                imageVector = Icons.Default.Add,
                 contentDescription = stringResource(R.string.add_car),
             )
         }

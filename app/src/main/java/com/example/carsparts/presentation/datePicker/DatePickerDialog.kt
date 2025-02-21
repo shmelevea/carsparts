@@ -43,8 +43,6 @@ fun DatePickerModal(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModalPreview() {
     var showDatePicker by remember { mutableStateOf(true) }

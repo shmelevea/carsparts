@@ -48,7 +48,7 @@ fun AddCarDialog(
     var carVin by rememberSaveable { mutableStateOf(carToEdit?.vin ?: "") }
 
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-    val years = (1910..currentYear).toList().reversed() // От 1910 до текущего года
+    val years = (1910..currentYear).toList().reversed()
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -65,8 +65,8 @@ fun AddCarDialog(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 400.dp) // Ограничиваем высоту диалога
-                        .verticalScroll(rememberScrollState()) // Добавляем скролл
+                        .heightIn(max = 400.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
@@ -141,7 +141,7 @@ fun AddCarDialog(
                 Button(
                     onClick = {
                         val car = CarEntity(
-                            id = carToEdit?.id ?: 0, // Сохраняем ID при редактировании
+                            id = carToEdit?.id ?: 0,
                             name = carName,
                             brand = carBrand,
                             model = carModel,
@@ -149,9 +149,9 @@ fun AddCarDialog(
                             vin = carVin
                         )
                         if (carToEdit != null) {
-                            onEditCar?.invoke(car) // Редактирование
+                            onEditCar?.invoke(car)
                         } else {
-                            onAddCar(car) // Добавление
+                            onAddCar(car)
                         }
                         onDismiss()
                     },
@@ -178,8 +178,8 @@ fun AddCarDialog(
 fun PreviewAddCarDialog() {
     AddCarDialog(
         showDialog = true,
-        onDismiss = { /* Обработка закрытия диалога */ },
-        onAddCar = { /* Обработка добавления автомобиля */ },
+        onDismiss = {},
+        onAddCar = {},
         carToEdit = CarEntity(
             id = 1,
             name = "My Car",
@@ -188,6 +188,6 @@ fun PreviewAddCarDialog() {
             year = 2020,
             vin = "1234567890ABCDEFG"
         ),
-        onEditCar = { /* Обработка редактирования автомобиля */ }
+        onEditCar = {}
     )
 }

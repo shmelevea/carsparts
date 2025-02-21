@@ -44,4 +44,6 @@
     <string name="search_by_name">Поиск по имени</string>
     <string name="search">Поиск</string>
     <string name="clear_search">Очистить поиск</string>
+    <string name="want_to_delete_car">Вы уверены, что хотите удалить \"%1$s\" машину?</string>
+    <string name="delete_car">Удалить машину</string>
 </resources>

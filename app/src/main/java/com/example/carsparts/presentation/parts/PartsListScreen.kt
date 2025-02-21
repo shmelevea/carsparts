@@ -90,9 +90,9 @@ fun PartsListScreenContent(
     onEditPart: (PartEntity) -> Unit,
     onDeletePart: (PartEntity) -> Unit,
     onLoadParts: () -> Unit,
-    onPartSelected: (PartEntity) -> Unit, // Добавлен параметр
-    searchQuery: String, // Новый параметр для строки поиска
-    onSearchQueryChanged: (String) -> Unit // Новый параметр для обработки изменений в строке поиска
+    onPartSelected: (PartEntity) -> Unit,
+    searchQuery: String,
+    onSearchQueryChanged: (String) -> Unit
 ) {
 
     var partToEdit by remember { mutableStateOf<PartEntity?>(null) }

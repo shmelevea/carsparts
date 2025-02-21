@@ -62,25 +62,23 @@ fun PartsInfoScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding() // Добавим отступ для статус-бара
+            .statusBarsPadding()
             .background(MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp), // Отступы для содержимого
-            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center // Центрируем содержимое по вертикали
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Заголовок с названием детали
             Text(
                 text = part.name,
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-//                modifier = Modifier.padding(8.dp)
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(32.dp))
-            // Далее вся информация по детали
+
             InfoRow(label = stringResource(R.string.part_number), value = part.partNumber)
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -159,8 +157,7 @@ fun PartsInfoScreenContent(
                 )
             }
         }
-
-        // Кнопка редактирования
+        
         FloatingActionButton(
             onClick = { onEdit(part) },
             modifier = Modifier
