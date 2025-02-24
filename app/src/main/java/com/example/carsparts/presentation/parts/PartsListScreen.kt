@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -58,13 +57,21 @@ fun PartsListScreen(
                     it.description.contains(searchQuery, ignoreCase = true) ||
                     it.partNumber.contains(searchQuery, ignoreCase = true)
         }
-        .sortedBy { it.name }
+        .sortedWith(
+            compareBy<PartEntity> { it.replacementDate.isEmpty() }  // Элементы без даты замены вниз
+                .thenByDescending { it.replacementDate }  // Сортировка по дате (от самой новой к самой старой)
+                .thenBy { it.name }  // Если дата одинаковая, то сортировка по имени
+        )
+
+    val groupedParts = filteredPartsList
+        .groupBy { it.replacementDate.ifEmpty { "" } }  // Группировка по дате замены (пустые даты заменяются на "")
+        .toSortedMap(compareByDescending { it })  // Сортировка групп по дате (от самой новой к самой старой)
 
     PartsListScreenContent(
         carId = carId,
         brand = brand,
         model = model,
-        partsList = filteredPartsList,
+        groupedParts = groupedParts,
         onAddPart = {
             onAddPart()
         },
@@ -84,7 +91,7 @@ fun PartsListScreenContent(
     carId: Int,
     brand: String,
     model: String,
-    partsList: List<PartEntity>,
+    groupedParts: Map<String, List<PartEntity>>,
     onAddPart: () -> Unit,
     onEditPart: (PartEntity) -> Unit,
     onDeletePart: (PartEntity) -> Unit,
@@ -136,21 +143,34 @@ fun PartsListScreenContent(
                     }
                 }
             )
-
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(partsList) { part ->
-                    PartItem(
-                        part = part,
-                        onClick = { onPartSelected(part) },
-                        onDelete = {
-                            partToDelete = part
-                            showDeleteDialog = true
-                        },
-                        onEdit = {
-                            partToEdit = part
-                            onEditPart(part)
+                // Для каждой даты замены создаем отдельный раздел
+                groupedParts.forEach { (date, parts) ->
+                    item {
+                        // Заменяем пустое значение на "Без даты замены"
+                        val displayDate = date.ifEmpty {
+                            stringResource(id = R.string.replacement_date_not_provided)
                         }
-                    )
+                        Text(
+                            text = displayDate, // Отображаем дату или "Без даты замены"
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    items(parts) { part ->
+                        PartItem(
+                            part = part,
+                            onClick = { onPartSelected(part) },
+                            onDelete = {
+                                partToDelete = part
+                                showDeleteDialog = true
+                            },
+                            onEdit = {
+                                partToEdit = part
+                                onEditPart(part)
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -201,6 +221,7 @@ fun PartsListScreenContent(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewPartsListScreen() {
@@ -210,7 +231,22 @@ fun PreviewPartsListScreen() {
             carId = 1,
             partNumber = "123456789",
             secondPartNumber = "223456789",
-            name = "Масляный фильтр",
+            name = "Мсляный фильтр",
+            purchaseDate = "10.01.2024",
+            replacementDate = "10.06.2024",
+            replacementCost = 5000,
+            partCost = 15000,
+            store = "АвтоМаг",
+            mileageKm = 55666,
+            breakdownMileageKm = 55666,
+            description = "Масляный фильтр для двигателя"
+        ),
+        PartEntity(
+            id = 1,
+            carId = 1,
+            partNumber = "123456789",
+            secondPartNumber = "223456789",
+            name = "Масляный фильтр2",
             purchaseDate = "10.01.2024",
             replacementDate = "10.06.2024",
             replacementCost = 5000,
@@ -234,14 +270,49 @@ fun PreviewPartsListScreen() {
             mileageKm = 60000,
             breakdownMileageKm = 60000,
             description = "Воздушный фильтр для системы охлаждения"
+        ),
+        PartEntity(
+            id = 3,
+            carId = 1,
+            partNumber = "111222333",
+            secondPartNumber = "444555666",
+            name = "Тормозные колодки",
+            purchaseDate = "01.03.2024",
+            replacementDate = "",
+            replacementCost = 3000,
+            partCost = 9000,
+            store = "АвтоМаг",
+            mileageKm = 55000,
+            breakdownMileageKm = 54000,
+            description = "Тормозные колодки для тормозной системы"
+        ),
+        PartEntity(
+            id = 3,
+            carId = 1,
+            partNumber = "111222333",
+            secondPartNumber = "444555666",
+            name = "Тормозные колодки",
+            purchaseDate = "01.03.2024",
+            replacementDate = "",
+            replacementCost = 3000,
+            partCost = 9000,
+            store = "АвтоМаг",
+            mileageKm = 55000,
+            breakdownMileageKm = 54000,
+            description = "Тормозные колодки для тормозной системы"
         )
     )
+
+    // Группировка запчастей по дате замены
+    val groupedParts = fakeParts
+        .sortedWith(compareByDescending<PartEntity> { it.replacementDate }.thenBy { it.name })
+        .groupBy { it.replacementDate }
 
     PartsListScreenContent(
         carId = 1,
         brand = "Toyota",
         model = "Camry",
-        partsList = fakeParts,
+        groupedParts = groupedParts,
         onAddPart = {},
         onEditPart = {},
         onDeletePart = {},

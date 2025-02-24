@@ -40,6 +40,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.PartEntity
 import com.example.carsparts.presentation.datePicker.DatePickerModal
+import com.example.carsparts.utils.capitalizeFirstLetter
+import com.example.carsparts.utils.formatPart
 import com.example.carsparts.viewmodels.PartsViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -53,20 +55,24 @@ fun CreateOrEditPartScreen(
     partsViewModel: PartsViewModel = hiltViewModel()
 ) {
 
-    var part by rememberSaveable { mutableStateOf(partToEdit ?: PartEntity(
-        carId = carId,
-        partNumber = "",
-        secondPartNumber = "",
-        name = "",
-        purchaseDate = "",
-        replacementDate = "",
-        replacementCost = 0,
-        partCost = 0,
-        store = "",
-        mileageKm = 0,
-        breakdownMileageKm = 0,
-        description = ""
-    )) }
+    var part by rememberSaveable {
+        mutableStateOf(
+            partToEdit ?: PartEntity(
+                carId = carId,
+                partNumber = "",
+                secondPartNumber = "",
+                name = "",
+                purchaseDate = "",
+                replacementDate = "",
+                replacementCost = 0,
+                partCost = 0,
+                store = "",
+                mileageKm = 0,
+                breakdownMileageKm = 0,
+                description = ""
+            )
+        )
+    }
 
     var isInitialized by rememberSaveable { mutableStateOf(false) }
 
@@ -135,7 +141,7 @@ fun CreateOrEditPartScreenContent(
         OutlinedTextField(
             value = part.name,
             onValueChange = {
-                if (it.length <= 20) onPartChange(part.copy(name = it))
+                if (it.length <= 20) onPartChange(part.copy(name = capitalizeFirstLetter(it)))
             },
             label = { Text(stringResource(R.string.part_name)) },
             modifier = Modifier.fillMaxWidth()
@@ -145,7 +151,7 @@ fun CreateOrEditPartScreenContent(
 
         OutlinedTextField(
             value = part.partNumber,
-            onValueChange = { onPartChange(part.copy(partNumber = it)) },
+            onValueChange = { onPartChange(part.copy(partNumber = formatPart(it))) },
             label = { Text(stringResource(R.string.part_number)) },
             modifier = Modifier.fillMaxWidth()
         )
@@ -155,7 +161,7 @@ fun CreateOrEditPartScreenContent(
         OutlinedTextField(
             value = part.secondPartNumber,
             onValueChange = {
-                if (it.length <= 20) onPartChange(part.copy(secondPartNumber = it))
+                if (it.length <= 20) onPartChange(part.copy(secondPartNumber = formatPart(it)))
             },
             label = { Text(stringResource(R.string.second_part_number)) },
             modifier = Modifier.fillMaxWidth()
@@ -259,7 +265,7 @@ fun CreateOrEditPartScreenContent(
             value = part.store,
             onValueChange = {
                 if (it.length <= 20) {
-                    onPartChange(part.copy(store = it))
+                    onPartChange(part.copy(store = capitalizeFirstLetter(it)))
                 }
             },
             label = { Text(stringResource(R.string.store)) },
@@ -297,7 +303,7 @@ fun CreateOrEditPartScreenContent(
         OutlinedTextField(
             value = part.description,
             onValueChange = {
-                if (it.length <= 300) onPartChange(part.copy(description = it))
+                if (it.length <= 300) onPartChange(part.copy(description = capitalizeFirstLetter(it)))
             },
             label = { Text(stringResource(R.string.description)) },
             modifier = Modifier

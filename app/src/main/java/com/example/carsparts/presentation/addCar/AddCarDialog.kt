@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.CarEntity
+import com.example.carsparts.utils.capitalizeFirstLetter
+import com.example.carsparts.utils.formatVin
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,21 +74,27 @@ fun AddCarDialog(
                     ) {
                         OutlinedTextField(
                             value = carName,
-                            onValueChange = { if (it.length <= 20) carName = it },
+                            onValueChange = {
+                                if (it.length <= 20) carName = capitalizeFirstLetter(it)
+                            },
                             label = { Text(stringResource(R.string.name)) },
                             modifier = Modifier.fillMaxWidth()
                         )
 
                         OutlinedTextField(
                             value = carBrand,
-                            onValueChange = { if (it.length <= 20) carBrand = it },
+                            onValueChange = {
+                                if (it.length <= 20) carBrand = capitalizeFirstLetter(it)
+                            },
                             label = { Text(stringResource(R.string.brand)) },
                             modifier = Modifier.fillMaxWidth()
                         )
 
                         OutlinedTextField(
                             value = carModel,
-                            onValueChange = { if (it.length <= 20) carModel = it },
+                            onValueChange = {
+                                if (it.length <= 20) carModel = capitalizeFirstLetter(it)
+                            },
                             label = { Text(stringResource(R.string.model)) },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -130,7 +137,7 @@ fun AddCarDialog(
 
                         OutlinedTextField(
                             value = carVin,
-                            onValueChange = { if (it.length <= 17) carVin = it },
+                            onValueChange = { if (it.length <= 17) carVin = formatVin(it) },
                             label = { Text(stringResource(R.string.vin)) },
                             modifier = Modifier.fillMaxWidth()
                         )

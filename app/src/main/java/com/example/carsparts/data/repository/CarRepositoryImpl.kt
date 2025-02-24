@@ -16,4 +16,8 @@ class CarRepositoryImpl @Inject constructor(
     override suspend fun updateCar(car: CarEntity) = carDao.updateCar(car)
 
     override suspend fun deleteCar(carId: Int) = carDao.deleteCar(carId)
+
+    override suspend fun getCarById(carId: Int): CarEntity? {
+        return carDao.getCarById(carId)
+    }
 }

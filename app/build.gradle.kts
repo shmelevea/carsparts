@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.room.runtime)
     implementation(libs.protolite.well.known.types)
+    implementation(libs.androidx.ui.text.google.fonts)
     ksp (libs.androidx.room.compiler)
     kapt (libs.hilt.compiler)
     kapt (libs.dagger.compiler)
@@ -75,4 +76,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.accompanist.systemuicontroller)
+    implementation (libs.gson)
 }

@@ -93,7 +93,7 @@ fun PartItem(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_create),
                     contentDescription = stringResource(R.string.edit_part),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
 
