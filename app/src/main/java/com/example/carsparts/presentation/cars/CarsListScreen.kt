@@ -3,6 +3,7 @@ package com.example.carsparts.presentation.cars
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -54,37 +56,49 @@ fun CarsListScreen(
         }
         .sortedWith(compareBy({ it.name }, { it.brand }, { it.model }))
 
-    CarsListScreenContent(
-        carList = sortedCarList,
-        onCarSelected = onCarSelected,
-        onEditCar = {
-            viewModel.setCarToEdit(it)
-            viewModel.setShowDialog(true)
-        },
-        onDeleteCar = viewModel::onDeleteCar,
-        onAddCarClick = {
-            viewModel.setCarToEdit(null)
-            viewModel.setShowDialog(true)
-        },
-        searchQuery = searchQuery,
-        onSearchQueryChanged = { searchQuery = it }
-    )
-
-    if (showDialog) {
-        AddCarDialog(
-            showDialog = showDialog,
-            onDismiss = { viewModel.setShowDialog(false) },
-            onAddCar = { car ->
-                viewModel.addCar(car)
-                viewModel.setShowDialog(false)
-            },
-            carToEdit = carToEdit,
-            onEditCar = { car ->
-                viewModel.onEditCar(car)
-                viewModel.setShowDialog(false)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.setCarToEdit(null)
+                    viewModel.setShowDialog(true)
+                },
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.add_car),
+                )
             }
+        }
+    ) { paddingValues ->
+        CarsListScreenContent(
+            carList = sortedCarList,
+            onCarSelected = onCarSelected,
+            onEditCar = {
+                viewModel.setCarToEdit(it)
+                viewModel.setShowDialog(true)
+            },
+            onDeleteCar = viewModel::onDeleteCar,
+            searchQuery = searchQuery,
+            onSearchQueryChanged = { searchQuery = it },
+            modifier = Modifier.padding(paddingValues)
         )
     }
+    AddCarDialog(
+        showDialog = showDialog,
+        onDismiss = { viewModel.setShowDialog(false) },
+        onAddCar = { car ->
+            viewModel.addCar(car)
+            viewModel.setShowDialog(false)
+        },
+        carToEdit = carToEdit,
+        onEditCar = { car ->
+            viewModel.onEditCar(car)
+            viewModel.setShowDialog(false)
+        }
+    )
 }
 
 @Composable
@@ -93,12 +107,12 @@ fun CarsListScreenContent(
     onCarSelected: (CarEntity) -> Unit,
     onEditCar: (CarEntity) -> Unit,
     onDeleteCar: (CarEntity) -> Unit,
-    onAddCarClick: () -> Unit,
     searchQuery: String,
-    onSearchQueryChanged: (String) -> Unit
+    onSearchQueryChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .statusBarsPadding()
             .background(MaterialTheme.colorScheme.surface)
@@ -134,7 +148,10 @@ fun CarsListScreenContent(
                 }
             )
 
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 80.dp)
+            ) {
                 items(carList) { car ->
                     CarItem(
                         car = car,
@@ -144,20 +161,6 @@ fun CarsListScreenContent(
                     )
                 }
             }
-        }
-
-        FloatingActionButton(
-            onClick = onAddCarClick,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.add_car),
-            )
         }
     }
 }
@@ -189,7 +192,6 @@ fun PreviewCarsListScreen() {
         onCarSelected = {},
         onEditCar = {},
         onDeleteCar = {},
-        onAddCarClick = {},
         searchQuery = "",
         onSearchQueryChanged = {}
     )

@@ -3,6 +3,7 @@ package com.example.carsparts.presentation.parts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,24 +71,35 @@ fun PartsListScreen(
         .groupBy { it.replacementDate.ifEmpty { "" } }
         .toSortedMap(compareByDescending { it })
 
-    PartsListScreenContent(
-        carId = carId,
-        name = name,
-        brand = brand,
-        model = model,
-        groupedParts = groupedParts,
-        onAddPart = {
-            onAddPart()
-        },
-        onEditPart = { part ->
-            onEditPart(part)
-        },
-        onDeletePart = { part -> viewModel.deletePart(part.id, part.carId) },
-        onLoadParts = { viewModel.loadPartsForCar(carId) },
-        onPartSelected = onPartSelected,
-        searchQuery = searchQuery,
-        onSearchQueryChanged = { searchQuery = it }
-    )
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddPart,
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.add_part),
+                )
+            }
+        }
+    ) { paddingValues ->
+        PartsListScreenContent(
+            carId = carId,
+            name = name,
+            brand = brand,
+            model = model,
+            groupedParts = groupedParts,
+            onEditPart = onEditPart,
+            onDeletePart = { part -> viewModel.deletePart(part.id, part.carId) },
+            onLoadParts = { viewModel.loadPartsForCar(carId) },
+            onPartSelected = onPartSelected,
+            searchQuery = searchQuery,
+            onSearchQueryChanged = { searchQuery = it },
+            modifier = Modifier.padding(paddingValues) // Учитываем отступ FAB
+        )
+    }
 }
 
 @Composable
@@ -96,13 +109,13 @@ fun PartsListScreenContent(
     brand: String,
     model: String,
     groupedParts: Map<String, List<PartEntity>>,
-    onAddPart: () -> Unit,
     onEditPart: (PartEntity) -> Unit,
     onDeletePart: (PartEntity) -> Unit,
     onLoadParts: () -> Unit,
     onPartSelected: (PartEntity) -> Unit,
     searchQuery: String,
-    onSearchQueryChanged: (String) -> Unit
+    onSearchQueryChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     var partToEdit by remember { mutableStateOf<PartEntity?>(null) }
@@ -112,7 +125,7 @@ fun PartsListScreenContent(
     LaunchedEffect(carId) { onLoadParts() }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .statusBarsPadding()
             .background(MaterialTheme.colorScheme.surface)
@@ -149,7 +162,10 @@ fun PartsListScreenContent(
                     }
                 }
             )
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 80.dp)
+            ) {
                 groupedParts.forEach { (date, parts) ->
                     item {
                         val displayDate = date.ifEmpty {
@@ -177,22 +193,6 @@ fun PartsListScreenContent(
                     }
                 }
             }
-        }
-
-        FloatingActionButton(
-            onClick = {
-                onAddPart()
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(R.string.add_car),
-            )
         }
     }
 
@@ -307,7 +307,6 @@ fun PreviewPartsListScreen() {
         )
     )
 
-    // Группировка запчастей по дате замены
     val groupedParts = fakeParts
         .sortedWith(compareByDescending<PartEntity> { it.replacementDate }.thenBy { it.name })
         .groupBy { it.replacementDate }
@@ -318,7 +317,6 @@ fun PreviewPartsListScreen() {
         brand = "Toyota",
         model = "Camry",
         groupedParts = groupedParts,
-        onAddPart = {},
         onEditPart = {},
         onDeletePart = {},
         onLoadParts = {},
