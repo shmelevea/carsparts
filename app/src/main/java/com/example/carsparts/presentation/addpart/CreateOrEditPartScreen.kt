@@ -42,6 +42,7 @@ import com.example.carsparts.domain.entity.PartEntity
 import com.example.carsparts.presentation.datePicker.DatePickerModal
 import com.example.carsparts.utils.capitalizeFirstLetter
 import com.example.carsparts.utils.formatPart
+import com.example.carsparts.utils.sanitizeInput
 import com.example.carsparts.viewmodels.PartsViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -141,17 +142,22 @@ fun CreateOrEditPartScreenContent(
         OutlinedTextField(
             value = part.name,
             onValueChange = {
-                if (it.length <= 20) onPartChange(part.copy(name = capitalizeFirstLetter(it)))
+                val sanitized = sanitizeInput(it, transform = ::capitalizeFirstLetter)
+                onPartChange(part.copy(name = sanitized))
             },
             label = { Text(stringResource(R.string.part_name)) },
             modifier = Modifier.fillMaxWidth()
         )
 
+
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = part.partNumber,
-            onValueChange = { onPartChange(part.copy(partNumber = formatPart(it))) },
+            onValueChange = {
+                val sanitized = sanitizeInput(it, transform = ::formatPart)
+                onPartChange(part.copy(partNumber = sanitized))
+            },
             label = { Text(stringResource(R.string.part_number)) },
             modifier = Modifier.fillMaxWidth()
         )
@@ -161,7 +167,8 @@ fun CreateOrEditPartScreenContent(
         OutlinedTextField(
             value = part.secondPartNumber,
             onValueChange = {
-                if (it.length <= 20) onPartChange(part.copy(secondPartNumber = formatPart(it)))
+                val sanitized = sanitizeInput(it, transform = ::formatPart)
+                onPartChange(part.copy(secondPartNumber = sanitized))
             },
             label = { Text(stringResource(R.string.second_part_number)) },
             modifier = Modifier.fillMaxWidth()
@@ -170,10 +177,10 @@ fun CreateOrEditPartScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = part.partCost.takeIf { it != 0 }?.toString()
-                ?: "",
+            value = part.partCost.takeIf { it != 0 }?.toString() ?: "",
             onValueChange = {
-                onPartChange(part.copy(partCost = it.toIntOrNull() ?: 0))
+                val sanitizedInput = it.replace("\n", "")
+                onPartChange(part.copy(partCost = sanitizedInput.toIntOrNull() ?: 0))
             },
             label = { Text(stringResource(R.string.part_cost)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -216,10 +223,10 @@ fun CreateOrEditPartScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = part.replacementCost.takeIf { it != 0 }?.toString()
-                ?: "",
+            value = part.replacementCost.takeIf { it != 0 }?.toString() ?: "",
             onValueChange = {
-                onPartChange(part.copy(replacementCost = it.toIntOrNull() ?: 0))
+                val sanitizedInput = it.replace("\n", "")
+                onPartChange(part.copy(replacementCost = sanitizedInput.toIntOrNull() ?: 0))
             },
             label = { Text(stringResource(R.string.replacement_cost)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -264,9 +271,8 @@ fun CreateOrEditPartScreenContent(
         OutlinedTextField(
             value = part.store,
             onValueChange = {
-                if (it.length <= 20) {
-                    onPartChange(part.copy(store = capitalizeFirstLetter(it)))
-                }
+                val sanitized = sanitizeInput(it, maxLength = 20, transform = ::capitalizeFirstLetter)
+                onPartChange(part.copy(store = sanitized))
             },
             label = { Text(stringResource(R.string.store)) },
             modifier = Modifier.fillMaxWidth()
@@ -275,10 +281,10 @@ fun CreateOrEditPartScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = part.mileageKm.takeIf { it != 0 }?.toString()
-                ?: "",
+            value = part.mileageKm.takeIf { it != 0 }?.toString() ?: "",
             onValueChange = {
-                onPartChange(part.copy(mileageKm = it.toIntOrNull() ?: 0))
+                val sanitizedInput = it.replace("\n", "")
+                onPartChange(part.copy(mileageKm = sanitizedInput.toIntOrNull() ?: 0))
             },
             label = { Text(stringResource(R.string.mileage_km)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -288,10 +294,10 @@ fun CreateOrEditPartScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = part.breakdownMileageKm.takeIf { it != 0 }?.toString()
-                ?: "",
+            value = part.breakdownMileageKm.takeIf { it != 0 }?.toString() ?: "",
             onValueChange = {
-                onPartChange(part.copy(breakdownMileageKm = it.toIntOrNull() ?: 0))
+                val sanitizedInput = it.replace("\n", "")
+                onPartChange(part.copy(breakdownMileageKm = sanitizedInput.toIntOrNull() ?: 0))
             },
             label = { Text(stringResource(R.string.breakdown_mileage_km)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),

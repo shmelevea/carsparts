@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +42,7 @@ import com.example.carsparts.viewmodels.PartsViewModel
 @Composable
 fun PartsListScreen(
     carId: Int,
+    name: String,
     brand: String,
     model: String,
     viewModel: PartsViewModel = hiltViewModel(),
@@ -58,17 +60,18 @@ fun PartsListScreen(
                     it.partNumber.contains(searchQuery, ignoreCase = true)
         }
         .sortedWith(
-            compareBy<PartEntity> { it.replacementDate.isEmpty() }  // Элементы без даты замены вниз
-                .thenByDescending { it.replacementDate }  // Сортировка по дате (от самой новой к самой старой)
-                .thenBy { it.name }  // Если дата одинаковая, то сортировка по имени
+            compareBy<PartEntity> { it.replacementDate.isEmpty() }
+                .thenByDescending { it.replacementDate }
+                .thenBy { it.name }
         )
 
     val groupedParts = filteredPartsList
-        .groupBy { it.replacementDate.ifEmpty { "" } }  // Группировка по дате замены (пустые даты заменяются на "")
-        .toSortedMap(compareByDescending { it })  // Сортировка групп по дате (от самой новой к самой старой)
+        .groupBy { it.replacementDate.ifEmpty { "" } }
+        .toSortedMap(compareByDescending { it })
 
     PartsListScreenContent(
         carId = carId,
+        name = name,
         brand = brand,
         model = model,
         groupedParts = groupedParts,
@@ -89,6 +92,7 @@ fun PartsListScreen(
 @Composable
 fun PartsListScreenContent(
     carId: Int,
+    name: String,
     brand: String,
     model: String,
     groupedParts: Map<String, List<PartEntity>>,
@@ -115,12 +119,14 @@ fun PartsListScreenContent(
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Text(
-                text = "$brand $model",
+                text = "$name, $brand $model",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .padding(8.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             OutlinedTextField(
@@ -144,15 +150,13 @@ fun PartsListScreenContent(
                 }
             )
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                // Для каждой даты замены создаем отдельный раздел
                 groupedParts.forEach { (date, parts) ->
                     item {
-                        // Заменяем пустое значение на "Без даты замены"
                         val displayDate = date.ifEmpty {
                             stringResource(id = R.string.replacement_date_not_provided)
                         }
                         Text(
-                            text = displayDate, // Отображаем дату или "Без даты замены"
+                            text = displayDate,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(8.dp)
                         )
@@ -310,6 +314,7 @@ fun PreviewPartsListScreen() {
 
     PartsListScreenContent(
         carId = 1,
+        name = "My",
         brand = "Toyota",
         model = "Camry",
         groupedParts = groupedParts,

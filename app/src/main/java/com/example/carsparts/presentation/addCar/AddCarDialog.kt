@@ -31,6 +31,7 @@ import com.example.carsparts.R
 import com.example.carsparts.domain.entity.CarEntity
 import com.example.carsparts.utils.capitalizeFirstLetter
 import com.example.carsparts.utils.formatVin
+import com.example.carsparts.utils.sanitizeInput
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +76,7 @@ fun AddCarDialog(
                         OutlinedTextField(
                             value = carName,
                             onValueChange = {
-                                if (it.length <= 20) carName = capitalizeFirstLetter(it)
+                                carName = capitalizeFirstLetter(sanitizeInput(it))
                             },
                             label = { Text(stringResource(R.string.name)) },
                             modifier = Modifier.fillMaxWidth()
@@ -84,7 +85,7 @@ fun AddCarDialog(
                         OutlinedTextField(
                             value = carBrand,
                             onValueChange = {
-                                if (it.length <= 20) carBrand = capitalizeFirstLetter(it)
+                                carBrand = capitalizeFirstLetter(sanitizeInput(it))
                             },
                             label = { Text(stringResource(R.string.brand)) },
                             modifier = Modifier.fillMaxWidth()
@@ -93,7 +94,7 @@ fun AddCarDialog(
                         OutlinedTextField(
                             value = carModel,
                             onValueChange = {
-                                if (it.length <= 20) carModel = capitalizeFirstLetter(it)
+                                carModel = capitalizeFirstLetter(sanitizeInput(it))
                             },
                             label = { Text(stringResource(R.string.model)) },
                             modifier = Modifier.fillMaxWidth()
@@ -137,7 +138,9 @@ fun AddCarDialog(
 
                         OutlinedTextField(
                             value = carVin,
-                            onValueChange = { if (it.length <= 17) carVin = formatVin(it) },
+                            onValueChange = {
+                                carVin = sanitizeInput(it, maxLength = 17, transform = ::formatVin)
+                            },
                             label = { Text(stringResource(R.string.vin)) },
                             modifier = Modifier.fillMaxWidth()
                         )

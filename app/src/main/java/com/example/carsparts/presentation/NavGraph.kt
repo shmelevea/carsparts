@@ -30,20 +30,22 @@ fun CarsPartsNavHost(navController: NavHostController) {
             val carsViewModel: CarsViewModel = hiltViewModel()
             CarsListScreen(
                 onCarSelected = { car ->
-                    navController.navigate("partsList/${car.id}/${car.brand}/${car.model}")
+                    navController.navigate("partsList/${car.id}/${car.name}/${car.brand}/${car.model}")
                 },
                 viewModel = carsViewModel
             )
         }
 
-        composable("partsList/{carId}/{brand}/{model}") { backStackEntry ->
+        composable("partsList/{carId}/{name}/{brand}/{model}") { backStackEntry ->
             val carId = backStackEntry.arguments?.getString("carId")?.toIntOrNull() ?: 0
+            val name = backStackEntry.arguments?.getString("name") ?: ""
             val brand = backStackEntry.arguments?.getString("brand") ?: ""
             val model = backStackEntry.arguments?.getString("model") ?: ""
 
             val partsViewModel: PartsViewModel = hiltViewModel()
             PartsListScreen(
                 carId = carId,
+                name = name,
                 brand = brand,
                 model = model,
                 onPartSelected = { part ->
