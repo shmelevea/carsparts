@@ -76,11 +76,10 @@ class CarsViewModel @Inject constructor(
 
     fun saveCar(context: Context, carId: Int) {
         viewModelScope.launch {
-            val file = saveCarWithPartsToFile(context, carId, exportDataUseCase)
-            if (file != null)
-                _saveResult.value = FILE_SAVED_SUCCESS
-            else
-                _saveResult.value = FILE_SAVE_ERROR
+            val car = _cars.value.find { it.id == carId }
+            val vin = car?.vin ?: "unknown_vin"
+            val file = saveCarWithPartsToFile(context, carId, vin, exportDataUseCase)
+            _saveResult.value = if (file != null) FILE_SAVED_SUCCESS else FILE_SAVE_ERROR
         }
     }
 

@@ -50,11 +50,8 @@ fun CarsListScreen(
     viewModel: CarsViewModel = hiltViewModel(),
     onSettingsClick: () -> Unit
 ) {
-
     val context = LocalContext.current
     val carList by viewModel.cars.collectAsState()
-    val showDialog by viewModel.showDialog.collectAsState()
-    val carToEdit by viewModel.carToEdit.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     val saveResult by viewModel.saveResult.collectAsState()
 
@@ -83,7 +80,6 @@ fun CarsListScreen(
         }
         .sortedWith(compareBy({ it.name }, { it.brand }, { it.model }))
 
-
     Scaffold { paddingValues ->
         CarsListScreenContent(
             carList = sortedCarList,
@@ -106,16 +102,10 @@ fun CarsListScreen(
     }
 
     AddCarDialog(
-        showDialog = showDialog,
-        onDismiss = { viewModel.setShowDialog(false) },
-        onAddCar = { car ->
-            viewModel.addCar(car)
+        viewModel = viewModel,
+        onDismiss = {
             viewModel.setShowDialog(false)
-        },
-        carToEdit = carToEdit,
-        onEditCar = { car ->
-            viewModel.onEditCar(car)
-            viewModel.setShowDialog(false)
+            viewModel.setCarToEdit(null)
         }
     )
 }
