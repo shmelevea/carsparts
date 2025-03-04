@@ -9,4 +9,5 @@ interface CarRepository {
     suspend fun updateCar(car: CarEntity)
     suspend fun deleteCar(carId: Int)
     suspend fun getCarById(carId: Int): CarEntity?
+    suspend fun getCarByVin(vin: String): CarEntity?
 }

@@ -9,6 +9,7 @@ import javax.inject.Inject
 class CarRepositoryImpl @Inject constructor(
     private val carDao: CarDao
 ) : CarRepository {
+
     override fun getAllCars(): Flow<List<CarEntity>> = carDao.getAllCars()
 
     override suspend fun insertCar(car: CarEntity) = carDao.insertCar(car)
@@ -19,5 +20,9 @@ class CarRepositoryImpl @Inject constructor(
 
     override suspend fun getCarById(carId: Int): CarEntity? {
         return carDao.getCarById(carId)
+    }
+
+    override suspend fun getCarByVin(vin: String): CarEntity? {
+       return carDao.getCarByVin(vin)
     }
 }

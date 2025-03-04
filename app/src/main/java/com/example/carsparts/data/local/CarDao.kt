@@ -24,4 +24,7 @@ interface CarDao {
 
     @Query("SELECT * FROM car WHERE id = :carId LIMIT 1")
     suspend fun getCarById(carId: Int): CarEntity?
+
+    @Query("SELECT * FROM car WHERE vin = :vin LIMIT 1")
+    suspend fun getCarByVin(vin: String): CarEntity?
 }

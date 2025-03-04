@@ -19,6 +19,17 @@ class PartsViewModel @Inject constructor(
     private val _parts = MutableStateFlow<List<PartEntity>>(emptyList())
     val parts: StateFlow<List<PartEntity>> = _parts
 
+    private val _part = MutableStateFlow<PartEntity?>(null)
+    val part: StateFlow<PartEntity?> = _part
+
+    fun loadPartInfo(partId: Int) {
+        viewModelScope.launch {
+            partRepository.getPartById(partId).collect { partEntity ->
+                _part.value = partEntity
+            }
+        }
+    }
+
     fun loadPartsForCar(carId: Int) {
         viewModelScope.launch {
             partRepository.getPartsForCar(carId).collect { partList ->

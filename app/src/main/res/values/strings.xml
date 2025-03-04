@@ -46,4 +46,22 @@
     <string name="want_to_delete_car">Are you sure you want to delete \"%1$s\" сar?</string>
     <string name="delete_car">Delete car</string>
     <string name="replacement_date_not_provided">Replacement date not provided</string>
+    <string name="save_car">Save car</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="menu">Menu</string>
+    <string name="import_data">Import data</string>
+    <string name="navigate">Navigate</string>
+    <string name="import_success">Import success</string>
+    <string name="import_error">Import error</string>
+    <string name="about_app">About this app</string>
+    <string name="app_info" translatable="false">This app was developed by Shmelev Eugene, 2025.</string>
+    <string name="contact_info" translatable="false">For inquiries, contact via Telegram @shmelevea.</string>
+    <string name="app_version" translatable="false">Version: 1.0.0</string>
+    <string name="privacy_policy" translatable="false">Privacy Policy</string>
+    <string name="terms_of_service" translatable="false">Terms of Service</string>
+    <string name="select">Select</string>
+    <string name="select_car">Select a car</string>
+    <string name="file_saved_success">File successfully saved!</string>
+    <string name="file_save_error">Error saving the file.</string>
 </resources>

@@ -32,13 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.PartEntity
-import com.example.carsparts.viewmodels.PartsInfoViewModel
+import com.example.carsparts.viewmodels.PartsViewModel
 
 @Composable
 fun PartsInfoScreen(
     partId: Int,
     onEdit: (PartEntity) -> Unit,
-    viewModel: PartsInfoViewModel = hiltViewModel()
+    viewModel: PartsViewModel = hiltViewModel()
 ) {
 
     val part = viewModel.part.collectAsState(initial = null).value

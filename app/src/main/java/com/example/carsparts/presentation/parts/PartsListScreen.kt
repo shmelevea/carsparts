@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,10 +51,12 @@ fun PartsListScreen(
     viewModel: PartsViewModel = hiltViewModel(),
     onPartSelected: (PartEntity) -> Unit,
     onAddPart: () -> Unit,
-    onEditPart: (PartEntity) -> Unit,
+    onEditPart: (PartEntity) -> Unit
 ) {
     val partsList by viewModel.parts.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     val filteredPartsList = partsList
         .filter {
@@ -71,20 +74,7 @@ fun PartsListScreen(
         .groupBy { it.replacementDate.ifEmpty { "" } }
         .toSortedMap(compareByDescending { it })
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddPart,
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.add_part),
-                )
-            }
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         PartsListScreenContent(
             carId = carId,
             name = name,
@@ -97,7 +87,8 @@ fun PartsListScreen(
             onPartSelected = onPartSelected,
             searchQuery = searchQuery,
             onSearchQueryChanged = { searchQuery = it },
-            modifier = Modifier.padding(paddingValues) // Учитываем отступ FAB
+            onAddPart = onAddPart,
+            modifier = Modifier.padding(paddingValues)
         )
     }
 }
@@ -115,6 +106,7 @@ fun PartsListScreenContent(
     onPartSelected: (PartEntity) -> Unit,
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
+    onAddPart: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -194,6 +186,19 @@ fun PartsListScreenContent(
                 }
             }
         }
+        FloatingActionButton(
+            onClick = onAddPart,
+            shape = CircleShape,
+            containerColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(R.string.add_part),
+            )
+        }
     }
 
     if (showDeleteDialog && partToDelete != null) {
@@ -224,7 +229,6 @@ fun PartsListScreenContent(
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -322,6 +326,7 @@ fun PreviewPartsListScreen() {
         onLoadParts = {},
         onPartSelected = {},
         searchQuery = "",
+        onAddPart = {},
         onSearchQueryChanged = {}
     )
 }

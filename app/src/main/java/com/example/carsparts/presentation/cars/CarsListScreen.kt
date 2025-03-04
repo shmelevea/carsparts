@@ -1,5 +1,6 @@
 package com.example.carsparts.presentation.cars
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,17 +39,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.CarEntity
 import com.example.carsparts.presentation.addCar.AddCarDialog
+import com.example.carsparts.utils.FILE_SAVED_SUCCESS
+import com.example.carsparts.utils.FILE_SAVE_ERROR
 import com.example.carsparts.viewmodels.CarsViewModel
 
 @Composable
 fun CarsListScreen(
     onCarSelected: (CarEntity) -> Unit,
-    viewModel: CarsViewModel = hiltViewModel()
+    viewModel: CarsViewModel = hiltViewModel(),
+    onSettingsClick: () -> Unit
 ) {
+
+    val context = LocalContext.current
     val carList by viewModel.cars.collectAsState()
     val showDialog by viewModel.showDialog.collectAsState()
     val carToEdit by viewModel.carToEdit.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+    val saveResult by viewModel.saveResult.collectAsState()
 
     val sortedCarList = carList
         .filter {
@@ -56,23 +65,18 @@ fun CarsListScreen(
         }
         .sortedWith(compareBy({ it.name }, { it.brand }, { it.model }))
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.setCarToEdit(null)
-                    viewModel.setShowDialog(true)
-                },
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.add_car),
-                )
-            }
+    if (saveResult != null) {
+        val message = when (saveResult) {
+            FILE_SAVED_SUCCESS -> stringResource(id = R.string.file_saved_success)
+            FILE_SAVE_ERROR -> stringResource(id = R.string.file_save_error)
+            else -> ""
         }
-    ) { paddingValues ->
+        if (message.isNotEmpty()) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    Scaffold { paddingValues ->
         CarsListScreenContent(
             carList = sortedCarList,
             onCarSelected = onCarSelected,
@@ -83,9 +87,16 @@ fun CarsListScreen(
             onDeleteCar = viewModel::onDeleteCar,
             searchQuery = searchQuery,
             onSearchQueryChanged = { searchQuery = it },
-            modifier = Modifier.padding(paddingValues)
+            onSaveCar = { carId -> viewModel.saveCar(context, carId) },
+            onAddCarClick = {
+                viewModel.setCarToEdit(null)
+                viewModel.setShowDialog(true)
+            },
+            modifier = Modifier.padding(paddingValues),
+            onSettingsClick = onSettingsClick
         )
     }
+
     AddCarDialog(
         showDialog = showDialog,
         onDismiss = { viewModel.setShowDialog(false) },
@@ -109,7 +120,10 @@ fun CarsListScreenContent(
     onDeleteCar: (CarEntity) -> Unit,
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onSaveCar: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    onAddCarClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -157,10 +171,37 @@ fun CarsListScreenContent(
                         car = car,
                         onClick = { onCarSelected(car) },
                         onEdit = { onEditCar(car) },
-                        onDelete = { onDeleteCar(car) }
+                        onDelete = { onDeleteCar(car) },
+                        onSave = { onSaveCar(car.id) }
                     )
                 }
             }
+        }
+
+        IconButton(
+            onClick = onSettingsClick,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(4.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_settings),
+                contentDescription = stringResource(R.string.settings)
+            )
+        }
+
+        FloatingActionButton(
+            onClick = onAddCarClick,
+            shape = CircleShape,
+            containerColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(R.string.add_car),
+            )
         }
     }
 }
@@ -193,6 +234,9 @@ fun PreviewCarsListScreen() {
         onEditCar = {},
         onDeleteCar = {},
         searchQuery = "",
-        onSearchQueryChanged = {}
+        onSaveCar = {},
+        onSearchQueryChanged = {},
+        onAddCarClick = {},
+        onSettingsClick = {}
     )
 }

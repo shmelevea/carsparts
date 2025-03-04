@@ -9,4 +9,5 @@ interface PartRepository {
     suspend fun insertPart(part: PartEntity)
     suspend fun updatePart(part: PartEntity)
     suspend fun deletePart(partId: Int)
+    suspend fun getAllPartIds(): List<Int>
 }

@@ -47,4 +47,17 @@
     <string name="want_to_delete_car">Вы уверены, что хотите удалить \"%1$s\" машину?</string>
     <string name="delete_car">Удалить машину</string>
     <string name="replacement_date_not_provided">Дата замены не указана</string>
+    <string name="save_car">Сохранить манишу</string>
+    <string name="settings">Настройки</string>
+    <string name="about">О программе</string>
+    <string name="menu">Меню</string>
+    <string name="about_app">О приложении</string>
+    <string name="import_data">Импорт данных</string>
+    <string name="navigate">Навигация</string>
+    <string name="import_success">Импорт завершен успешно</string>
+    <string name="import_error">Ошибка импорта</string>
+    <string name="select">Выбрать</string>
+    <string name="select_car">Выберите машину</string>
+    <string name="file_saved_success">Файл успешно сохранен!</string>
+    <string name="file_save_error">Ошибка при сохранении файла.</string>
 </resources>

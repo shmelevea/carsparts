@@ -15,11 +15,4 @@ class ExportDataUseCase(
 
         return Gson().toJson(mapOf("type" to "car_with_parts", "car" to car, "parts" to parts))
     }
-
-    suspend fun exportPart(partId: Int): String {
-        val part = partRepository.getPartById(partId).firstOrNull()
-            ?: throw IllegalArgumentException("Part not found")
-
-        return Gson().toJson(mapOf("type" to "part_only", "part" to part))
-    }
 }

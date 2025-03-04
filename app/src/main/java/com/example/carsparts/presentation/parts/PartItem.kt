@@ -99,7 +99,6 @@ fun PartItem(
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
-
             IconButton(onClick = { onDelete(part.id) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_delete),

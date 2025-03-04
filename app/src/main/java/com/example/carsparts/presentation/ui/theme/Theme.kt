@@ -280,7 +280,7 @@ fun CarsPartsTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
+//        typography = AppTypography,
         content = {
             Box(
                 modifier = Modifier

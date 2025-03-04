@@ -39,7 +39,8 @@ fun CarItem(
     car: CarEntity,
     onClick: (CarEntity) -> Unit,
     onEdit: (CarEntity) -> Unit,
-    onDelete: (CarEntity) -> Unit
+    onDelete: (CarEntity) -> Unit,
+    onSave: (CarEntity) -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
@@ -89,14 +90,21 @@ fun CarItem(
             IconButton(onClick = { onEdit(car) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_create),
-                    contentDescription = "Edit car",
+                    contentDescription = stringResource(R.string.edit_car),
                     tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            IconButton(onClick = { onSave(car) }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_save),
+                    contentDescription = stringResource(R.string.save_car),
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
             IconButton(onClick = { showDeleteDialog = true }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = "Delete car",
+                    contentDescription = stringResource(R.string.delete_car),
                     tint = MaterialTheme.colorScheme.error
                 )
             }
@@ -137,8 +145,9 @@ fun PreviewCarItem() {
             year = 2021,
             vin = "5YJSA1E26MF123456"
         ),
-        onClick = { /* Нажатие обработано */ },
-        onEdit = { /* Редактирование обработано */ },
-        onDelete = { /* Удаление обработано */ }
+        onClick = {},
+        onEdit = {},
+        onDelete = {},
+        onSave = {}
     )
 }

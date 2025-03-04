@@ -6,55 +6,78 @@ import com.example.carsparts.domain.repository.CarRepository
 import com.example.carsparts.domain.repository.PartRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 class ImportDataUseCase(
     private val carRepository: CarRepository,
     private val partRepository: PartRepository
 ) {
-    suspend operator fun invoke(json: String): ImportResult {
-        val type = object : TypeToken<Map<String, Any>>() {}.type
-        val data: Map<String, Any> = Gson().fromJson(json, type)
+    suspend operator fun invoke(json: String) {
+        val typeToken = object : TypeToken<Map<String, Any>>() {}.type
+        val data: Map<String, Any> = Gson().fromJson(json, typeToken)
 
-        return when (data["type"]) {
-            "car_with_parts" -> {
-                // Вызов функции импорта для машины с запчастями
-                importCarWithParts(data)
-
-                // Возвращаем результат
-                val car = data["car"] as CarEntity
-                ImportResult.CarImported(car)
-            }
-            "part_only" -> {
-                val part = data["part"] as PartEntity
-                val carId = if (part.carId != 0) part.carId else null
-                // Добавить логику импорта для запчасти
-                ImportResult.PartImported(part, carId)
-            }
+        when (data["type"]) {
+            "car_with_parts" -> importCarWithParts(data)
             else -> throw IllegalArgumentException("Unknown data type")
         }
     }
 
-    private suspend fun importCarWithParts(data: Map<String, Any>) {
-        val carJson = Gson().toJson(data["car"]) // Преобразуем обратно в JSON
-        val partsJson = Gson().toJson(data["parts"]) // Преобразуем обратно в JSON
+    private suspend fun importCarWithParts(data: Map<String, Any>): CarEntity {
+        val carJson = Gson().toJson(data["car"])
+        val partsJson = Gson().toJson(data["parts"])
 
         val car: CarEntity = Gson().fromJson(carJson, CarEntity::class.java)
-
         val listType = object : TypeToken<List<PartEntity>>() {}.type
         val parts: List<PartEntity> = Gson().fromJson(partsJson, listType)
 
-        // Проверяем, существует ли машина с таким id
-        val existingCar = carRepository.getCarById(car.id)
-        if (existingCar != null) {
-            carRepository.updateCar(car)
+        val existingCar = carRepository.getCarByVin(car.vin)
+        val finalCar = if (existingCar != null) {
+            car.copy(id = existingCar.id)
         } else {
-            carRepository.insertCar(car)
+            val conflictCar = carRepository.getCarById(car.id)
+            if (conflictCar != null) {
+                car.copy(id = generateNewCarId())
+            } else {
+                car
+            }
         }
 
-        // Обновляем или вставляем запчасти
-        parts.forEach { part ->
-            val existingPart = partRepository.getPartById(part.id)
-            partRepository.updatePart(part)
+        if (existingCar != null) {
+            carRepository.updateCar(finalCar)
+        } else {
+            carRepository.insertCar(finalCar)
         }
+
+        val existingParts = partRepository.getPartsForCar(finalCar.id).first()
+
+        parts.forEach { part ->
+            val isDuplicate = existingParts.any {
+                it.partNumber == part.partNumber && it.replacementDate == part.replacementDate
+            }
+
+            if (!isDuplicate) {
+                val newPart = part.copy(id = generateNewPartId(), carId = finalCar.id)
+                partRepository.insertPart(newPart)
+            }
+        }
+
+        return finalCar
+    }
+
+    private suspend fun generateNewCarId(): Int {
+        var newId: Int
+        do {
+            newId = (1..Int.MAX_VALUE).random()
+        } while (carRepository.getCarById(newId) != null)
+        return newId
+    }
+
+    private suspend fun generateNewPartId(): Int {
+        var newId: Int
+        do {
+            newId = (1..Int.MAX_VALUE).random()
+        } while (partRepository.getPartById(newId).firstOrNull() != null)
+        return newId
     }
 }

@@ -13,7 +13,7 @@ import com.example.carsparts.presentation.addpart.CreateOrEditPartScreen
 import com.example.carsparts.presentation.cars.CarsListScreen
 import com.example.carsparts.presentation.parts.PartsListScreen
 import com.example.carsparts.presentation.partsInfo.PartsInfoScreen
-import com.example.carsparts.viewmodels.PartsInfoViewModel
+import com.example.carsparts.presentation.settings.SettingsScreen
 import com.example.carsparts.viewmodels.CarsViewModel
 import com.example.carsparts.viewmodels.PartsViewModel
 
@@ -32,7 +32,10 @@ fun CarsPartsNavHost(navController: NavHostController) {
                 onCarSelected = { car ->
                     navController.navigate("partsList/${car.id}/${car.name}/${car.brand}/${car.model}")
                 },
-                viewModel = carsViewModel
+                viewModel = carsViewModel,
+                onSettingsClick = {
+                    navController.navigate("settings")
+                }
             )
         }
 
@@ -62,7 +65,7 @@ fun CarsPartsNavHost(navController: NavHostController) {
         }
 
         composable("createOrEditPart/{carId}") { backStackEntry ->
-            Log.d("CarsPartsNavHost","NewPart")
+            Log.d("CarsPartsNavHost", "NewPart")
             val carId = backStackEntry.arguments?.getString("carId")?.toIntOrNull() ?: 0
 
             CreateOrEditPartScreen(
@@ -92,7 +95,7 @@ fun CarsPartsNavHost(navController: NavHostController) {
 
         composable("partInfo/{partId}") { backStackEntry ->
             val partId = backStackEntry.arguments?.getString("partId")?.toIntOrNull() ?: 0
-            val partsInfoViewModel: PartsInfoViewModel = hiltViewModel()
+            val partsInfoViewModel: PartsViewModel = hiltViewModel()
             partsInfoViewModel.loadPartInfo(partId)
             val part by partsInfoViewModel.part.collectAsState(initial = null)
 
@@ -106,6 +109,9 @@ fun CarsPartsNavHost(navController: NavHostController) {
             }
         }
 
+        composable("settings") {
+            SettingsScreen()
+        }
     }
 }
 

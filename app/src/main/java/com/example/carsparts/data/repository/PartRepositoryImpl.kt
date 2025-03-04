@@ -4,6 +4,7 @@ import com.example.carsparts.data.local.PartDao
 import com.example.carsparts.domain.entity.PartEntity
 import com.example.carsparts.domain.repository.PartRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class PartRepositoryImpl @Inject constructor(
@@ -30,4 +31,7 @@ class PartRepositoryImpl @Inject constructor(
         partDao.deletePart(partId)
     }
 
+    override suspend fun getAllPartIds(): List<Int> {
+        return partDao.getAllPartIds().firstOrNull() ?: emptyList()
+    }
 }
