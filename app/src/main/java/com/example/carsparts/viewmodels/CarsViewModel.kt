@@ -30,7 +30,7 @@ class CarsViewModel @Inject constructor(
     private val _carToEdit = MutableStateFlow<CarEntity?>(null)
     val carToEdit: StateFlow<CarEntity?> = _carToEdit
 
-    private val _saveResult = MutableStateFlow<String?>(null) // для сообщений об успехе или ошибке
+    private val _saveResult = MutableStateFlow<String?>(null)
     val saveResult: StateFlow<String?> = _saveResult
 
     init {
@@ -81,7 +81,10 @@ class CarsViewModel @Inject constructor(
                 _saveResult.value = FILE_SAVED_SUCCESS
             else
                 _saveResult.value = FILE_SAVE_ERROR
-
         }
+    }
+
+    fun resetSaveResult() {
+        _saveResult.value = null
     }
 }

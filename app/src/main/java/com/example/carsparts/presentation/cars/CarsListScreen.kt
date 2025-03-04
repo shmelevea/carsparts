@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,23 @@ fun CarsListScreen(
     var searchQuery by remember { mutableStateOf("") }
     val saveResult by viewModel.saveResult.collectAsState()
 
+    val successMessage = stringResource(id = R.string.file_saved_success)
+    val errorMessage = stringResource(id = R.string.file_save_error)
+
+    LaunchedEffect(saveResult) {
+        if (saveResult != null) {
+            val message = when (saveResult) {
+                FILE_SAVED_SUCCESS -> successMessage
+                FILE_SAVE_ERROR -> errorMessage
+                else -> ""
+            }
+            if (message.isNotEmpty()) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                viewModel.resetSaveResult()
+            }
+        }
+    }
+
     val sortedCarList = carList
         .filter {
             it.name.contains(searchQuery, ignoreCase = true) ||
@@ -65,16 +83,6 @@ fun CarsListScreen(
         }
         .sortedWith(compareBy({ it.name }, { it.brand }, { it.model }))
 
-    if (saveResult != null) {
-        val message = when (saveResult) {
-            FILE_SAVED_SUCCESS -> stringResource(id = R.string.file_saved_success)
-            FILE_SAVE_ERROR -> stringResource(id = R.string.file_save_error)
-            else -> ""
-        }
-        if (message.isNotEmpty()) {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        }
-    }
 
     Scaffold { paddingValues ->
         CarsListScreenContent(
