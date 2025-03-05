@@ -1,6 +1,11 @@
 package com.example.carsparts.presentation.cars
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.CarEntity
 
@@ -46,6 +52,20 @@ fun CarItem(
     val context = LocalContext.current
     var showDeleteDialog by remember { mutableStateOf(false) }
     val borderColor = MaterialTheme.colorScheme.outline
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            onSave(car)
+        } else {
+            Toast.makeText(
+                context,
+                context.getString(R.string.permission_required_to_save),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -94,7 +114,21 @@ fun CarItem(
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
-            IconButton(onClick = { onSave(car) }) {
+            IconButton(onClick = {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        onSave(car)
+                    } else {
+                        permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                } else {
+                    onSave(car)
+                }
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_save),
                     contentDescription = stringResource(R.string.save_car),

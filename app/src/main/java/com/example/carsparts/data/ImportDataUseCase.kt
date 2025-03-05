@@ -27,19 +27,19 @@ class ImportDataUseCase(
         val carJson = Gson().toJson(data["car"])
         val partsJson = Gson().toJson(data["parts"])
 
-        val car: CarEntity = Gson().fromJson(carJson, CarEntity::class.java)
+        val importedCar: CarEntity = Gson().fromJson(carJson, CarEntity::class.java)
         val listType = object : TypeToken<List<PartEntity>>() {}.type
         val parts: List<PartEntity> = Gson().fromJson(partsJson, listType)
+        val existingCar = carRepository.getCarByVin(importedCar.vin)
 
-        val existingCar = carRepository.getCarByVin(car.vin)
         val finalCar = if (existingCar != null) {
-            car.copy(id = existingCar.id)
+            existingCar.copy(vin = importedCar.vin)
         } else {
-            val conflictCar = carRepository.getCarById(car.id)
+            val conflictCar = carRepository.getCarById(importedCar.id)
             if (conflictCar != null) {
-                car.copy(id = generateNewCarId())
+                importedCar.copy(id = generateNewCarId())
             } else {
-                car
+                importedCar
             }
         }
 

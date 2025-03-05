@@ -60,4 +60,5 @@
     <string name="select_car">Выберите машину</string>
     <string name="file_saved_success">Файл успешно сохранен!</string>
     <string name="file_save_error">Ошибка при сохранении файла.</string>
+    <string name="permission_required_to_save">Требуется разрешение для сохранения</string>
 </resources>
