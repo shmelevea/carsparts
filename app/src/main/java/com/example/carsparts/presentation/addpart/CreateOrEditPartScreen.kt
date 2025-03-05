@@ -2,7 +2,6 @@ package com.example.carsparts.presentation.addpart
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -117,16 +117,13 @@ fun CreateOrEditPartScreenContent(
 
     val isSaveEnabled = part.name.isNotBlank() && part.partNumber.isNotBlank()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    )
     Column(
         modifier = Modifier
+            .imePadding()
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(horizontal = 4.dp)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Text(
             text = stringResource(titleResId),
@@ -148,7 +145,6 @@ fun CreateOrEditPartScreenContent(
             label = { Text(stringResource(R.string.part_name)) },
             modifier = Modifier.fillMaxWidth()
         )
-
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -271,7 +267,8 @@ fun CreateOrEditPartScreenContent(
         OutlinedTextField(
             value = part.store,
             onValueChange = {
-                val sanitized = sanitizeInput(it, maxLength = 20, transform = ::capitalizeFirstLetter)
+                val sanitized =
+                    sanitizeInput(it, maxLength = 20, transform = ::capitalizeFirstLetter)
                 onPartChange(part.copy(store = sanitized))
             },
             label = { Text(stringResource(R.string.store)) },
