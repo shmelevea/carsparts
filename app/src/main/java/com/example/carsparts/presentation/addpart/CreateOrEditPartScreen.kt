@@ -207,7 +207,7 @@ fun CreateOrEditPartScreenContent(
                 onDateSelected = { millis ->
                     millis?.let {
                         val formattedDate =
-                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
+                            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date(it))
                         onPartChange(part.copy(purchaseDate = formattedDate))
                     }
                     showPurchaseDatePicker = false
@@ -253,7 +253,7 @@ fun CreateOrEditPartScreenContent(
                 onDateSelected = { millis ->
                     millis?.let {
                         val formattedDate =
-                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
+                            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date(it))
                         onPartChange(part.copy(replacementDate = formattedDate))
                     }
                     showReplacementDatePicker = false

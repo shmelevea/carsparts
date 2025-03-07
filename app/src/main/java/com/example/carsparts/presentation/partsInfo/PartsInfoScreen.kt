@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
@@ -64,13 +65,13 @@ fun PartsInfoScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
+            .padding(top = 8.dp)
             .background(MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -81,45 +82,45 @@ fun PartsInfoScreenContent(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(22.dp))
 
             InfoRow(label = stringResource(R.string.part_number), value = part.partNumber)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(
                 label = stringResource(R.string.second_part_number),
                 value = part.secondPartNumber
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(label = stringResource(R.string.purchase_date), value = part.purchaseDate)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(
                 label = stringResource(R.string.part_cost),
                 value = stringResource(R.string.quantity_rub, part.partCost)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(
                 label = stringResource(R.string.replacement_date),
                 value = part.replacementDate
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(
                 label = stringResource(R.string.replacement_cost),
                 value = stringResource(R.string.quantity_rub, part.replacementCost)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(label = stringResource(R.string.store), value = part.store)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(
                 label = stringResource(R.string.mileage_km),
@@ -129,7 +130,7 @@ fun PartsInfoScreenContent(
                 )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             InfoRow(
                 label = stringResource(R.string.breakdown_mileage_km),
@@ -139,7 +140,7 @@ fun PartsInfoScreenContent(
                 )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = stringResource(R.string.description),
@@ -158,11 +159,11 @@ fun PartsInfoScreenContent(
                 Text(
                     text = part.description,
                     color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = Int.MAX_VALUE // Позволяет отображать длинный текст
+                    maxLines = Int.MAX_VALUE
                 )
             }
         }
-        
+
         FloatingActionButton(
             onClick = { onEdit(part) },
             modifier = Modifier
@@ -184,7 +185,7 @@ fun InfoRow(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
 
     ) {

@@ -5,11 +5,13 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -63,23 +65,44 @@ fun PartItem(
                     MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.1f),
                     RoundedCornerShape(8.dp),
                 )
-                .padding(16.dp)
+                .padding(4.dp)
         ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(18.dp)
+            ) {
+                IconButton(onClick = { onDelete(part.id) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.remove_spare_part),
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .size(16.dp)
+                            .align(Alignment.TopEnd)
+                    )
+                }
+            }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp),
+                        .padding(start = 8.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
                         text = part.name,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 4.dp),
+                        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp, top = 4.dp),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -88,7 +111,7 @@ fun PartItem(
                         text = stringResource(R.string.quantity_km, part.mileageKm),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp, top = 4.dp),
                     )
 
                     Text(
@@ -105,22 +128,19 @@ fun PartItem(
                                         Toast.LENGTH_SHORT
                                     )
                                     .show()
+
                             }
+                            .padding(start = 4.dp, bottom = 4.dp, top = 4.dp),
                     )
                 }
 
-                IconButton(onClick = { onEdit(part.id) }) {
+                IconButton(onClick = { onEdit(part.id) },
+                    modifier = Modifier.size(30.dp)) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_create),
                         contentDescription = stringResource(R.string.edit_part),
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                IconButton(onClick = { onDelete(part.id) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_delete),
-                        contentDescription = stringResource(R.string.remove_spare_part),
-                        tint = MaterialTheme.colorScheme.error
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }

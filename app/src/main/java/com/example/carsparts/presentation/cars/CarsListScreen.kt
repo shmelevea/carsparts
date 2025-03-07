@@ -135,7 +135,7 @@ fun CarsListScreenContent(
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(top = 8.dp)
                     .align(Alignment.CenterHorizontally)
             )
 

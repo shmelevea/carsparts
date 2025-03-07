@@ -10,11 +10,13 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -79,6 +81,7 @@ fun CarItem(
             .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(8.dp))
             .fillMaxWidth()
     ) {
+
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
@@ -88,24 +91,49 @@ fun CarItem(
                     MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.1f),
                     RoundedCornerShape(8.dp),
                 )
-                .padding(16.dp)
+                .padding(4.dp)
         ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(18.dp)
+            ) {
+                IconButton(onClick = { showDeleteDialog = true }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.delete_car),
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .size(16.dp)
+                            .align(Alignment.TopEnd)
+                    )
+                }
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Column(modifier = Modifier.weight(1f)) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
                     Text(
                         text = car.name,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp, top = 4.dp),
                     )
                     Text(
                         text = "${car.brand} ${car.model}, ${car.year}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        modifier = Modifier.padding(start = 4.dp, bottom = 4.dp, top = 4.dp),
                     )
                     Text(
                         text = car.vin,
@@ -122,41 +150,44 @@ fun CarItem(
                                     )
                                     .show()
                             }
+                            .padding(start = 4.dp, bottom = 4.dp, top = 4.dp),
                     )
                 }
-                IconButton(onClick = { onEdit(car) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_create),
-                        contentDescription = stringResource(R.string.edit_car),
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                IconButton(onClick = {
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                        if (ContextCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            ) == PackageManager.PERMISSION_GRANTED
-                        ) {
-                            onSave(car)
+
+                IconButton(
+                    onClick = {
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                            if (ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                onSave(car)
+                            } else {
+                                permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            }
                         } else {
-                            permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            onSave(car)
                         }
-                    } else {
-                        onSave(car)
-                    }
-                }) {
+                    },
+                    modifier = Modifier.size(30.dp)
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_save),
                         contentDescription = stringResource(R.string.save_car),
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
-                IconButton(onClick = { showDeleteDialog = true }) {
+                IconButton(
+                    onClick = { onEdit(car) },
+                    modifier = Modifier.size(30.dp)
+                ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_delete),
-                        contentDescription = stringResource(R.string.delete_car),
-                        tint = MaterialTheme.colorScheme.error
+                        painter = painterResource(id = R.drawable.ic_create),
+                        contentDescription = stringResource(R.string.edit_car),
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }

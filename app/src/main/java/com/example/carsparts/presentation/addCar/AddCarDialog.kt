@@ -42,7 +42,6 @@ import com.example.carsparts.utils.sanitizeInput
 import com.example.carsparts.viewmodels.CarsViewModel
 import java.util.Calendar
 
-
 @Composable
     fun AddCarDialog(
     viewModel: CarsViewModel = hiltViewModel(),
@@ -92,9 +91,13 @@ fun AddCarDialogContent(
 
     LaunchedEffect(carVin) {
         if (carVin.isNotEmpty()) {
-            isCheckingVin = true
-            isVinUniqueState = isVinUnique(carVin)
-            isCheckingVin = false
+            if (carToEdit != null && carVin == carToEdit.vin) {
+                isVinUniqueState = true
+            } else {
+                isCheckingVin = true
+                isVinUniqueState = isVinUnique(carVin)
+                isCheckingVin = false
+            }
         } else {
             isVinUniqueState = true
         }
