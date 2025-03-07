@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -67,103 +70,118 @@ fun CarItem(
         }
     }
 
-    Box(
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
         modifier = Modifier
-            .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp)
             .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp)
-            .clickable { onClick(car) }
+            .fillMaxWidth()
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth(),
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { onClick(car) }
+                .fillMaxWidth()
+                .background(
+                    MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.1f),
+                    RoundedCornerShape(8.dp),
+                )
+                .padding(16.dp)
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = car.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Text(
-                    text = "${car.brand} ${car.model}, ${car.year}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Text(
-                    text = car.vin,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                    modifier = Modifier
-                        .clickable {
-                            clipboardManager.setText(AnnotatedString(car.vin))
-                            Toast
-                                .makeText(context,
-                                    context.getString(R.string.vin_copied_to_clipboard), Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                )
-            }
-            IconButton(onClick = { onEdit(car) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_create),
-                    contentDescription = stringResource(R.string.edit_car),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            IconButton(onClick = {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    if (ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        onSave(car)
-                    } else {
-                        permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-                } else {
-                    onSave(car)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = car.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = "${car.brand} ${car.model}, ${car.year}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = car.vin,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .clickable {
+                                clipboardManager.setText(AnnotatedString(car.vin))
+                                Toast
+                                    .makeText(
+                                        context,
+                                        context.getString(R.string.vin_copied_to_clipboard),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            }
+                    )
                 }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_save),
-                    contentDescription = stringResource(R.string.save_car),
-                    tint = MaterialTheme.colorScheme.tertiary
-                )
-            }
-            IconButton(onClick = { showDeleteDialog = true }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = stringResource(R.string.delete_car),
-                    tint = MaterialTheme.colorScheme.error
-                )
+                IconButton(onClick = { onEdit(car) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_create),
+                        contentDescription = stringResource(R.string.edit_car),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+                IconButton(onClick = {
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                        if (ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            onSave(car)
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        }
+                    } else {
+                        onSave(car)
+                    }
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_save),
+                        contentDescription = stringResource(R.string.save_car),
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                IconButton(onClick = { showDeleteDialog = true }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_delete),
+                        contentDescription = stringResource(R.string.delete_car),
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
-    }
 
-    if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            title = { Text(stringResource(R.string.delete_car)) },
-            text = { Text(stringResource(R.string.want_to_delete_car, car.name)) },
-            confirmButton = {
-                Button(onClick = {
-                    onDelete(car)
-                    showDeleteDialog = false
-                }) {
-                    Text(stringResource(R.string.delete))
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = { Text(stringResource(R.string.delete_car)) },
+                text = { Text(stringResource(R.string.want_to_delete_car, car.name)) },
+                confirmButton = {
+                    Button(onClick = {
+                        onDelete(car)
+                        showDeleteDialog = false
+                    }) {
+                        Text(stringResource(R.string.delete))
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showDeleteDialog = false }) {
+                        Text(stringResource(R.string.cancel))
+                    }
                 }
-            },
-            dismissButton = {
-                Button(onClick = { showDeleteDialog = false }) {
-                    Text(stringResource(R.string.cancel))
-                }
-            }
-        )
+            )
+        }
     }
 }
 

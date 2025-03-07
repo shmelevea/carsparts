@@ -5,20 +5,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +44,7 @@ import java.util.Calendar
 
 
 @Composable
-fun AddCarDialog(
+    fun AddCarDialog(
     viewModel: CarsViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
 ) {
@@ -58,7 +62,8 @@ fun AddCarDialog(
                     viewModel.addCar(car)
                 }
                 onDismiss()
-            }
+            },
+            isVinUnique = { vin -> viewModel.isVinUnique(vin) }
         )
     }
 }
@@ -69,6 +74,7 @@ fun AddCarDialogContent(
     carToEdit: CarEntity?,
     onDismiss: () -> Unit,
     onConfirm: (CarEntity) -> Unit,
+    isVinUnique: suspend (String) -> Boolean
 ) {
     var carName by rememberSaveable { mutableStateOf(carToEdit?.name ?: "") }
     var carBrand by rememberSaveable { mutableStateOf(carToEdit?.brand ?: "") }
@@ -80,6 +86,19 @@ fun AddCarDialogContent(
     val years = (1910..currentYear).toList().reversed()
 
     var expanded by remember { mutableStateOf(false) }
+
+    var isVinUniqueState by remember { mutableStateOf(true) }
+    var isCheckingVin by remember { mutableStateOf(false) }
+
+    LaunchedEffect(carVin) {
+        if (carVin.isNotEmpty()) {
+            isCheckingVin = true
+            isVinUniqueState = isVinUnique(carVin)
+            isCheckingVin = false
+        } else {
+            isVinUniqueState = true
+        }
+    }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -132,17 +151,6 @@ fun AddCarDialogContent(
                             .padding(bottom = 8.dp)
                     )
 
-                    OutlinedTextField(
-                        value = carVin,
-                        onValueChange = {
-                            carVin = sanitizeInput(it, maxLength = 17, transform = ::formatVin)
-                        },
-                        label = { Text(stringResource(R.string.vin)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                    )
-
                     ExposedDropdownMenuBox(
                         expanded = expanded,
                         onExpandedChange = { expanded = it }
@@ -161,6 +169,7 @@ fun AddCarDialogContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .menuAnchor(MenuAnchorType.PrimaryEditable)
+                                .padding(bottom = 8.dp)
                         )
 
                         ExposedDropdownMenu(
@@ -178,6 +187,28 @@ fun AddCarDialogContent(
                             }
                         }
                     }
+
+                    OutlinedTextField(
+                        value = carVin,
+                        onValueChange = {
+                            carVin = sanitizeInput(it, maxLength = 17, transform = ::formatVin)
+                        },
+                        label = { Text(stringResource(R.string.vin)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        isError = !isVinUniqueState && carVin.isNotEmpty(),
+                        supportingText = {
+                            if (!isVinUniqueState && carVin.isNotEmpty()) {
+                                Text(stringResource(R.string.vin_already_exists))
+                            }
+                        },
+                        trailingIcon = {
+                            if (isCheckingVin) {
+                                CircularProgressIndicator(modifier = Modifier.size(16.dp))
+                            }
+                        }
+                    )
                 }
             }
         },
@@ -198,13 +229,14 @@ fun AddCarDialogContent(
                         carBrand.isNotEmpty() &&
                         carModel.isNotEmpty() &&
                         carYear.isNotEmpty() &&
-                        carVin.isNotEmpty()
+                        carVin.isNotEmpty() &&
+                        isVinUniqueState
             ) {
                 Text(stringResource(R.string.ok))
             }
         },
         dismissButton = {
-            Button(onClick = { onDismiss() }) {
+            OutlinedButton(onClick = { onDismiss() }) {
                 Text(stringResource(R.string.cancel))
             }
         }
@@ -223,9 +255,14 @@ fun PreviewAddCarDialogContent() {
         vin = "12345678901234567"
     )
 
+    val isVinUniqueStub: suspend (String) -> Boolean = {
+        true
+    }
+
     AddCarDialogContent(
         carToEdit = carToEdit,
         onDismiss = {},
-        onConfirm = {}
+        onConfirm = {},
+        isVinUnique= isVinUniqueStub
     )
 }

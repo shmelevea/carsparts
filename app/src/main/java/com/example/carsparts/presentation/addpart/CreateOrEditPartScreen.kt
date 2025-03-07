@@ -128,7 +128,7 @@ fun CreateOrEditPartScreenContent(
         Text(
             text = stringResource(titleResId),
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally)

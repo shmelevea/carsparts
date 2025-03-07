@@ -133,7 +133,7 @@ fun CarsListScreenContent(
             Text(
                 text = stringResource(R.string.garage),
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .padding(8.dp)
                     .align(Alignment.CenterHorizontally)

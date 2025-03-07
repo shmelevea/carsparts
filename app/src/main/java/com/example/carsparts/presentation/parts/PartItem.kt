@@ -1,6 +1,7 @@
 package com.example.carsparts.presentation.parts
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -39,72 +43,86 @@ fun PartItem(
     val context = LocalContext.current
     val borderColor = MaterialTheme.colorScheme.outline
 
-    Box(
+
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
         modifier = Modifier
-            .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp)
-            .border(1.dp, borderColor, RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp)
-            .clickable { onClick(part.id) }
+            .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { onClick(part.id) }
+                .fillMaxWidth()
+                .background(
+                    MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.1f),
+                    RoundedCornerShape(8.dp),
+                )
+                .padding(16.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                horizontalAlignment = Alignment.Start
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = part.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Text(
-                    text = stringResource(R.string.quantity_km, part.mileageKm),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-
-                Text(
-                    text = part.partNumber,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                Column(
                     modifier = Modifier
-                        .clickable {
-                            clipboardManager.setText(AnnotatedString(part.partNumber))
-                            Toast
-                                .makeText(
-                                    context,
-                                    context.getString(R.string.part_number_copied_to_clipboard),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        }
-                )
-            }
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = part.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
-            IconButton(onClick = { onEdit(part.id) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_create),
-                    contentDescription = stringResource(R.string.edit_part),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            IconButton(onClick = { onDelete(part.id) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = stringResource(R.string.remove_spare_part),
-                    tint = MaterialTheme.colorScheme.error
-                )
+                    Text(
+                        text = stringResource(R.string.quantity_km, part.mileageKm),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+                    Text(
+                        text = part.partNumber,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier
+                            .clickable {
+                                clipboardManager.setText(AnnotatedString(part.partNumber))
+                                Toast
+                                    .makeText(
+                                        context,
+                                        context.getString(R.string.part_number_copied_to_clipboard),
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            }
+                    )
+                }
+
+                IconButton(onClick = { onEdit(part.id) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_create),
+                        contentDescription = stringResource(R.string.edit_part),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+                IconButton(onClick = { onDelete(part.id) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_delete),
+                        contentDescription = stringResource(R.string.remove_spare_part),
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
     }

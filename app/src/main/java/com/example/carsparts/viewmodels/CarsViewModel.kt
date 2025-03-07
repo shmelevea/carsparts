@@ -37,6 +37,10 @@ class CarsViewModel @Inject constructor(
         loadCars()
     }
 
+    suspend fun isVinUnique(vin: String): Boolean {
+        return carRepository.getCarByVin(vin) == null
+    }
+
     private fun loadCars() {
         viewModelScope.launch {
             carRepository.getAllCars().collect { carList ->

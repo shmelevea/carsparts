@@ -65,4 +65,5 @@
     <string name="file_saved_success">File successfully saved!</string>
     <string name="file_save_error">Error saving the file.</string>
     <string name="permission_required_to_save">Permission required to save</string>
+    <string name="vin_already_exists">VIN already exists</string>
 </resources>

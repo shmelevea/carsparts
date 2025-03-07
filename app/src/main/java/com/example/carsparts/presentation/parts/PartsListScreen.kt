@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,8 +54,6 @@ fun PartsListScreen(
 ) {
     val partsList by viewModel.parts.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
-
-    val context = LocalContext.current
 
     val filteredPartsList = partsList
         .filter {
@@ -126,7 +123,7 @@ fun PartsListScreenContent(
             Text(
                 text = "$name, $brand $model",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .padding(8.dp)
                     .align(Alignment.CenterHorizontally),
