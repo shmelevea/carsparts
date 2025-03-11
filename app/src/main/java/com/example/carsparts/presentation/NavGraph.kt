@@ -1,6 +1,5 @@
 package com.example.carsparts.presentation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +25,7 @@ fun CarsPartsApp() {
 @Composable
 fun CarsPartsNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "carsList") {
+
         composable("carsList") {
             val carsViewModel: CarsViewModel = hiltViewModel()
             CarsListScreen(
@@ -65,7 +65,6 @@ fun CarsPartsNavHost(navController: NavHostController) {
         }
 
         composable("createOrEditPart/{carId}") { backStackEntry ->
-            Log.d("CarsPartsNavHost", "NewPart")
             val carId = backStackEntry.arguments?.getString("carId")?.toIntOrNull() ?: 0
 
             CreateOrEditPartScreen(

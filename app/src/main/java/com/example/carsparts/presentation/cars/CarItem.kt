@@ -78,7 +78,7 @@ fun CarItem(
         ),
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 8.dp)
-            .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(8.dp))
+            .border(BorderStroke(0.dp, borderColor), RoundedCornerShape(8.dp))
             .fillMaxWidth()
     ) {
 
@@ -96,16 +96,16 @@ fun CarItem(
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .size(18.dp)
             ) {
-                IconButton(onClick = { showDeleteDialog = true }) {
+                IconButton(onClick = { showDeleteDialog = true },
+                    modifier = Modifier.size(16.dp)
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close),
                         contentDescription = stringResource(R.string.delete_car),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .size(16.dp)
                             .align(Alignment.TopEnd)
                     )
                 }

@@ -52,7 +52,7 @@ fun PartItem(
         ),
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 8.dp)
-            .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(8.dp))
+            .border(BorderStroke(0.dp, borderColor), RoundedCornerShape(8.dp))
             .fillMaxWidth()
 
     ) {
@@ -70,16 +70,16 @@ fun PartItem(
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .size(18.dp)
             ) {
-                IconButton(onClick = { onDelete(part.id) }) {
+                IconButton(onClick = { onDelete(part.id) },
+                    modifier = Modifier.size(16.dp)
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close),
                         contentDescription = stringResource(R.string.remove_spare_part),
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .size(16.dp)
                             .align(Alignment.TopEnd)
                     )
                 }
@@ -134,8 +134,10 @@ fun PartItem(
                     )
                 }
 
-                IconButton(onClick = { onEdit(part.id) },
-                    modifier = Modifier.size(30.dp)) {
+                IconButton(
+                    onClick = { onEdit(part.id) },
+                    modifier = Modifier.size(30.dp)
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_create),
                         contentDescription = stringResource(R.string.edit_part),

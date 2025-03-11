@@ -65,7 +65,6 @@ fun PartsInfoScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 8.dp)
             .background(MaterialTheme.colorScheme.surface)
     ) {
         Column(
@@ -80,7 +79,9 @@ fun PartsInfoScreenContent(
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .padding(top = 8.dp)
             )
             Spacer(modifier = Modifier.height(22.dp))
 
