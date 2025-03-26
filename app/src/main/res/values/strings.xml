@@ -57,7 +57,7 @@
     <string name="about_app">About this app</string>
     <string name="app_info" translatable="false">This app was developed by Shmelev Eugene, 2025.</string>
     <string name="contact_info" translatable="false">For inquiries, contact via Telegram @shmelevea.</string>
-    <string name="app_version" translatable="false">Version: 1.0.0</string>
+    <string name="app_version" translatable="false">Version: 1.0.1</string>
     <string name="privacy_policy" translatable="false">Privacy Policy</string>
     <string name="terms_of_service" translatable="false">Terms of Service</string>
     <string name="select">Select</string>

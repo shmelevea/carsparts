@@ -52,7 +52,7 @@ fun PartItem(
         ),
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 8.dp)
-            .border(BorderStroke(0.dp, borderColor), RoundedCornerShape(8.dp))
+            .border(BorderStroke(1.dp, borderColor), RoundedCornerShape(8.dp))
             .fillMaxWidth()
 
     ) {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1063220703299",
+    "project_id": "carsparts-c693f",
+    "storage_bucket": "carsparts-c693f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063220703299:android:409d4ca3e47ac7fb8ae4f6",
+        "android_client_info": {
+          "package_name": "com.example.carsparts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7tD8Z-73K1BOIv4gm_uWo55A-DVUFKuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
