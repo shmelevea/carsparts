@@ -3,7 +3,7 @@ package com.example.carsparts.viewmodels
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.carsparts.data.ExportDataUseCase
+import com.example.carsparts.domain.usecase.ExportDataUseCase
 import com.example.carsparts.domain.entity.CarEntity
 import com.example.carsparts.domain.repository.CarRepository
 import com.example.carsparts.utils.FILE_SAVED_SUCCESS

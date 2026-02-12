@@ -2,7 +2,7 @@ package com.example.carsparts.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.carsparts.data.ImportDataUseCase
+import com.example.carsparts.domain.usecase.ImportDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +22,7 @@ class ImportViewModel @Inject constructor(
             try {
                 importDataUseCase(json)
                 _importSuccess.value = true
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _importSuccess.value = false
             }
         }

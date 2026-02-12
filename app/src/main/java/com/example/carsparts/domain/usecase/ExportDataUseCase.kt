@@ -1,4 +1,4 @@
-package com.example.carsparts.data
+package com.example.carsparts.domain.usecase
 
 import com.example.carsparts.domain.repository.CarRepository
 import com.example.carsparts.domain.repository.PartRepository

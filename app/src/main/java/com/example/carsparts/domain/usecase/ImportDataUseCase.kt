@@ -1,4 +1,4 @@
-package com.example.carsparts.data
+package com.example.carsparts.domain.usecase
 
 import com.example.carsparts.domain.entity.CarEntity
 import com.example.carsparts.domain.entity.PartEntity

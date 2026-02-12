@@ -1,7 +1,7 @@
 package com.example.carsparts.di
 
-import com.example.carsparts.data.ExportDataUseCase
-import com.example.carsparts.data.ImportDataUseCase
+import com.example.carsparts.domain.usecase.ExportDataUseCase
+import com.example.carsparts.domain.usecase.ImportDataUseCase
 import com.example.carsparts.domain.repository.CarRepository
 import com.example.carsparts.domain.repository.PartRepository
 import dagger.Module

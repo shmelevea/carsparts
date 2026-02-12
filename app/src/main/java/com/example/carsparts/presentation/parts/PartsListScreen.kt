@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.PartEntity
+import com.example.carsparts.utils.toLocalDateOrNull
 import com.example.carsparts.viewmodels.PartsViewModel
 
 @Composable
@@ -61,8 +62,8 @@ fun PartsListScreen(
                     it.partNumber.contains(searchQuery, ignoreCase = true)
         }
         .sortedWith(
-            compareBy<PartEntity> { it.replacementDate.isEmpty() }
-                .thenByDescending { it.replacementDate }
+            compareBy<PartEntity> { it.replacementDate.toLocalDateOrNull() == null }
+                .thenByDescending { it.replacementDate.toLocalDateOrNull() }
                 .thenBy { it.name }
         )
 
@@ -106,7 +107,6 @@ fun PartsListScreenContent(
     modifier: Modifier = Modifier
 ) {
 
-    var partToEdit by remember { mutableStateOf<PartEntity?>(null) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var partToDelete by remember { mutableStateOf<PartEntity?>(null) }
 
@@ -173,7 +173,6 @@ fun PartsListScreenContent(
                                 showDeleteDialog = true
                             },
                             onEdit = {
-                                partToEdit = part
                                 onEditPart(part)
                             }
                         )

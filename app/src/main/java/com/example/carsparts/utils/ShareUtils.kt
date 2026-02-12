@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import com.example.carsparts.data.ExportDataUseCase
+import com.example.carsparts.domain.usecase.ExportDataUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -30,7 +30,7 @@ suspend fun saveCarWithPartsToFile(
         }
 
         file
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 }
@@ -50,7 +50,7 @@ private fun saveToDownloadsScoped(context: Context, fileName: String, data: Stri
     return try {
         contentResolver.openOutputStream(uri)?.use { it.write(data.toByteArray()) }
         File(uri.path ?: return null)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 }
