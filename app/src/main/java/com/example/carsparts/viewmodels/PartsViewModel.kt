@@ -3,6 +3,7 @@ package com.example.carsparts.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.carsparts.domain.entity.PartEntity
+import com.example.carsparts.domain.entity.parsedReplacementDate
 import com.example.carsparts.domain.repository.PartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -33,10 +34,17 @@ class PartsViewModel @Inject constructor(
     fun loadPartsForCar(carId: Int) {
         viewModelScope.launch {
             partRepository.getPartsForCar(carId).collect { partList ->
-                _parts.value = partList
+                _parts.value = sortParts(partList)
             }
         }
     }
+
+    private fun sortParts(parts: List<PartEntity>): List<PartEntity> =
+        parts.sortedWith(
+            compareBy<PartEntity> { it.parsedReplacementDate == null }
+                .thenByDescending { it.parsedReplacementDate }
+                .thenBy { it.name }
+        )
 
     fun addPart(part: PartEntity) {
         viewModelScope.launch {

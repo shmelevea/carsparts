@@ -38,7 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.carsparts.R
 import com.example.carsparts.domain.entity.PartEntity
-import com.example.carsparts.utils.toLocalDateOrNull
+import com.example.carsparts.domain.entity.parsedReplacementDate
+import com.example.carsparts.utils.DATE_FORMATTER
 import com.example.carsparts.viewmodels.PartsViewModel
 
 @Composable
@@ -55,20 +56,14 @@ fun PartsListScreen(
     val partsList by viewModel.parts.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
-    val filteredPartsList = partsList
-        .filter {
-            it.name.contains(searchQuery, ignoreCase = true) ||
-                    it.description.contains(searchQuery, ignoreCase = true) ||
-                    it.partNumber.contains(searchQuery, ignoreCase = true)
-        }
-        .sortedWith(
-            compareBy<PartEntity> { it.replacementDate.toLocalDateOrNull() == null }
-                .thenByDescending { it.replacementDate.toLocalDateOrNull() }
-                .thenBy { it.name }
-        )
+    val filteredPartsList = partsList.filter {
+        it.name.contains(searchQuery, ignoreCase = true) ||
+                it.description.contains(searchQuery, ignoreCase = true) ||
+                it.partNumber.contains(searchQuery, ignoreCase = true)
+    }
 
     val groupedParts = filteredPartsList
-        .groupBy { it.replacementDate.ifEmpty { "" } }
+        .groupBy { it.parsedReplacementDate }
         .toSortedMap(compareByDescending { it })
 
     Scaffold { paddingValues ->
@@ -77,7 +72,9 @@ fun PartsListScreen(
             name = name,
             brand = brand,
             model = model,
-            groupedParts = groupedParts,
+            groupedParts = groupedParts.mapKeys { (key, _) ->
+                key?.format(DATE_FORMATTER) ?: stringResource(R.string.replacement_date_not_provided)
+            },
             onEditPart = onEditPart,
             onDeletePart = { part -> viewModel.deletePart(part.id, part.carId) },
             onLoadParts = { viewModel.loadPartsForCar(carId) },
